@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elevator Emulator</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+   
+    <!-- <div class="controls">
+        <button id="add-floor">Add Floor</button>
+        <button id="remove-floor">Remove Floor</button>
+        <label>
+            Set Floors: 
+            <input type="number" id="floor-input" value="7" min="1">
+        </label>
+    </div> -->
+
+    <!-- <div class="queue-display">
+        <h3>Current Queue:</h3>
+        <ul id="queue-list"></ul> 
+    </div> -->
+    
+    <div class="building-wrapper">
+
+        <div class="shaft">
+            <div class="elevator"></div>
+        </div>
+
+        <div class="building">
+            <!-- Floors will be dynamically added here -->
+        </div>
+
+        <div class="elevator-button-panel">
+            <!-- Elevator button panel will be added here -->
+        </div>
+    </div>
+
+    <!-- <audio id="elevator-music" loop autoplay>
+        <source src="./resources/elevator-music.mp3" type="audio/mpeg">
+    </audio> -->
+
+    <!-- <button id="pause-music">Pause Music</button>
+    <button id="play-music">Play Music</button> -->
+
+    <script type="module" src="./scripts/app.js"></script>
+    <script type="module" src="./scripts/render.js"></script>
+    <script type="module" src="./scripts/elevator.js"></script>
+    
+    <!-- <script src="./scripts/music.js"></script> -->
+    <!-- <script type="module" src="./scripts/changeNumberOfFloors.js"></script> -->
+
+    
+</body>
+</html>
