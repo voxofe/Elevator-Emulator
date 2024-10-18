@@ -1,4 +1,6 @@
-import {nFloors, elevatorStartFloor, floorHeight} from './app.js'
+import {nFloors, elevatorStartFloor, floorHeight} from './App.js'
+
+import { highlightButton, resetButton } from './beautifulButtons.js';
 
 // Elevator State
 let queue = [];
@@ -7,8 +9,11 @@ let targetFloor = null;
 let nextFloor = null;
 let isMoving = false;
 let doorsClosed = true;
+let newRequest = false;// Make moveElevator() check for intermediate stops only when there's a new addition to the queue
+let afterStop = null; //Check to see if if elevator just made a stop and is about to move again
 const closeDoorsDelay = 3000;  // 3-second delay at each floor from open to closed doors
-const speed = 10;  // Elevator movement speed (increase to slow down)
+const speed = 20;  // Elevator movement opeed (decrease to speed up)
+
 
 
 // Function to attach event listeners to elevator buttons
@@ -41,18 +46,24 @@ function addToQueue(floorRequest) {
     } else if (!queue.includes(floorRequest)) {
         console.log(`Floor ${floorRequest} added to the queue.`);
         queue.push(floorRequest);
+        highlightButton(floorRequest); // Highlight the button with red outline
+        newRequest = true;
         processQueue(floorRequest);
     }
+
+
 }
 
 // Process the queue
 function processQueue(floorRequest) {
-    if (isMoving || queue.length === 0) return;  // Do nothing if already moving or no requests
 
     // Set target floor if it has not already been set
     if (!targetFloor) {
         targetFloor = floorRequest;
+        afterStop = false;
         console.log(`Target floor: ${targetFloor}`);
+        
+
         if (!doorsClosed) {
             closeDoors().then(() => {
                 moveElevator(); // Start moving after doors are closed
@@ -60,48 +71,71 @@ function processQueue(floorRequest) {
         } else {
             moveElevator();  // Start moving directly if doors are already closed
         }    
-    }
+    }else {console.log(`I already have a target. Floor ${floorRequest} was just added to the queue.`)}
 }
+
+function getNextStop(isMovingUp, currentMarginBottom, targetMarginBottom){
+    const floorsInPath = queue.filter(
+        floor => isMovingUp ? 
+        ( (floor-1) * 100 + 25 > currentMarginBottom && (floor-1) * 100 + 25 < targetMarginBottom) :
+        ( (floor-1) * 100 + 25 < currentMarginBottom && (floor-1) * 100 + 25 > targetMarginBottom)
+    );
+    if (floorsInPath.length) {
+        nextFloor = isMovingUp ? Math.min(...floorsInPath) : Math.max(...floorsInPath);  // Get the nearest floor in the direction
+         
+        console.log(`Checked intermediate floors: ${floorsInPath} and chose floor ${nextFloor} as next`)  
+    }else if(floorsInPath.length === 0 && queue.length > 1){
+        console.log(`Already passed floor ${queue.at(-1)}`)
+    }
+    newRequest = false;
+    return nextFloor;
+}
+
 
 function moveElevator() {
 
-
     // Mark the elevator as moving
     isMoving = true;
-    
     nextFloor = targetFloor;// Go straight to target if there are no stops
-    const isMovingUp = nextFloor > currentFloor;  // Determine direction
 
+
+    const isMovingUp = nextFloor > currentFloor;  // Determine direction
+    const elevator = document.querySelector('.elevator');  // Elevator element to animate its movement
+    const targetMarginBottom = (targetFloor - 1) * 100 + 25;
+    
     let currentInterval; // Variable to hold the current interval for elevator movement
     currentInterval = setInterval(() => {
 
-        nextFloor = targetFloor;// Go straight to target if there are no stops
-        const isMovingUp = nextFloor > currentFloor;  // Determine direction
-
-        // Real-time check for intermediate stops in the queue while moving
-        const floorsInPath = queue.filter(floor => isMovingUp ? (floor > currentFloor && floor < targetFloor) : (floor < currentFloor && floor > targetFloor));
-        if (floorsInPath.length > 0) {
-            nextFloor = isMovingUp ? Math.min(...floorsInPath) : Math.max(...floorsInPath);  // Get the nearest floor in the direction
-            console.log(`Found next floor: ${nextFloor}`)
-        }
-        
-        const elevator = document.querySelector('.elevator');  // Elevator element to animate its movement
-        const targetMarginBottom = (nextFloor - 1) * 100 + 25;  // Calculate target position in pixels
         let currentMarginBottom = parseInt(window.getComputedStyle(elevator).marginBottom, 10) || 0; // Get current position
 
+        // Real-time check for intermediate stops in the queue while moving 
+        // only for floors that are not already passed
+        // and only when queue is updated or after elevator reaches a stop and there's a non-empty queue to check again
+
+        if(newRequest || afterStop){
+            nextFloor = getNextStop(isMovingUp, currentMarginBottom, targetMarginBottom);
+
+        }
+        
+        console.log(`Next stop at floor ${nextFloor}!`)
+        const nextFloorMarginBottom = (nextFloor - 1) * 100 + 25;  // Calculate the next floor (stop) position in pixels
+
+
         // If we've reached the target margin (either the main targetFloor or an intermediate nextFloor)
-        if ((isMovingUp && currentMarginBottom >= targetMarginBottom) || (!isMovingUp && currentMarginBottom <= targetMarginBottom)) {
+        if ((isMovingUp && currentMarginBottom >= nextFloorMarginBottom) || (!isMovingUp && currentMarginBottom <= nextFloorMarginBottom)) {
 
             currentFloor = nextFloor;  // Update the current floor
-            console.log(`Reached floor ${currentFloor}`);
+            console.log(`Reached floor ${currentFloor}!`);
             queue = queue.filter(floor => floor !== nextFloor);  // Remove the arrived floor from the queue
-            
-            isMoving = false;  // Mark as no longer moving
+            resetButton(currentFloor); // Reset the button to default state
 
+            isMoving = false;  // Mark as no longer moving
 
             if(currentFloor === targetFloor){
                 console.log("Achieved target floor!");
                 targetFloor = queue.length ? queue[0] : null;
+                nextFloor = queue.length ? targetFloor : null;
+                afterStop = true;
                 clearInterval(currentInterval);  // Stop the interval when the target floor is reached
                 openDoorsAtCurrentFloor().then(() => {
                     if(targetFloor){
@@ -109,61 +143,22 @@ function moveElevator() {
                     }
                 });
             }else {
-                console.log("Achieved intermediate floor!")
+                console.log(`Moving on to target floor ${targetFloor}!`)
+                afterStop = true;
                 clearInterval(currentInterval);  // Stop the interval when the intermediate floor is reached
                 openDoorsAtCurrentFloor().then(() => {
                     moveElevator();
                 });
             }
 
-            
         } else {
-            // Move the elevator 1px at a time
+            // Move the elevator 1px at a time up or down depending on direction
             currentMarginBottom += isMovingUp ? 1 : -1;
             elevator.style.marginBottom = `${currentMarginBottom}px`;
-            // currentFloor = (currentMarginBottom - 25) / 100 - 1;
+            afterStop = false;
         }
-
-        processQueue();
     }, speed);  // Control the speed of the elevator movement
 }
-
-
-
-
-    // const elevator = document.querySelector('.elevator');
-    // const targetMarginBottom = (targetFloor - 1) * 100 + 25; // Calculate target position in pixels
-    // let currentMarginBottom = parseInt(window.getComputedStyle(elevator).marginBottom, 10) || 0; // Get current position
-
-    // const isMovingUp = targetFloor > currentFloor;  // Determine direction
-
-
-    // const interval = setInterval(() => {
-    //     // Real-time check for intermediate stops in the queue while moving
-    //     const floorsInPath = queue.filter(floor => isMovingUp ? (floor > currentFloor && floor <= targetFloor) : (floor < currentFloor && floor >= targetFloor));
-    //     if (floorsInPath.length > 0) {
-    //         nextFloor = floorsInPath[0];  // Get the nearest floor in the direction
-    //         queue = queue.filter(floor => floor !== nextFloor);  // Remove it from queue
-    //     }
-
-    //     // If we've reached the target margin (either the main targetFloor or an intermediate nextFloor)
-    //     if ((isMovingUp && currentMarginBottom >= targetMarginBottom) || (!isMovingUp && currentMarginBottom <= targetMarginBottom)) {
-    //         clearInterval(interval);  // Stop the interval
-    //         currentFloor = targetFloor;  // Update the current floor
-    //         console.log(`Reached floor ${currentFloor}`);
-
-    //         openDoorsAtCurrentFloor().then(() => {
-    //             isMoving = false;  // Mark as no longer moving
-    //             if (queue.length > 0) {
-    //                 processQueue();  // If there are more floors in the queue, process the next one
-    //             }
-    //         });
-    //     } else {
-    //         // Move the elevator 1px at a time
-    //         currentMarginBottom += isMovingUp ? 1 : -1;
-    //         elevator.style.marginBottom = `${currentMarginBottom}px`;
-    //     }
-    // }, speed);  // Control the speed of the elevator
 
 
 // Open the doors at the current floor
@@ -191,7 +186,3 @@ function closeDoors() {
         setTimeout(resolve, 1000);  // Resolve after 1 second for door closing animation
     });
 }
-
-
-// Export the necessary functions
-export { addToQueue, currentFloor };

@@ -9,15 +9,6 @@ body{
     margin-top: 30px;
 }
 
-.controls {
-    margin: 20px 0;
-}
-
-.controls input {
-    width: 50px;
-    text-align: center;
-}
-
 .building-wrapper {
     display: flex;
     justify-content: center;
@@ -57,13 +48,13 @@ body{
 
 /* Style for the floor number */
 .floor-number {
-    color: rgb(0, 0, 0); /* Text color */
-    font-size: 20px; /* Adjust font size */
-    font-weight: bold; /* Bold text */
-    position: absolute; /* Absolute positioning */
-    top: 48%; /* Center vertically */
-    left: 50%; /* Center horizontally */
-    transform: translate(-50%, -50%); /* Adjust to center */
+    color: rgb(0, 0, 0); 
+    font-size: 20px; 
+    font-weight: bold; 
+    position: absolute; 
+    top: 48%; 
+    left: 50%; 
+    transform: translate(-50%, -50%); 
 }
 
 
@@ -73,7 +64,7 @@ body{
     border: 1px solid black;
     margin-left: 40px; 
     position: relative;
-    display: flex; /* Use Flexbox */
+    display: flex; 
     align-items: flex-end; /* Align elevator to the bottom */
     justify-content: center; /* Center elevator horizontally */
 }
@@ -102,11 +93,22 @@ body{
     align-self: center; /* Align it to the top rather than stretch */
 }
 
-.elevator-button-panel-buttons {
+/* New Button Styles */
+.elevator-button-panel button {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%; /* Makes the button circular */
+    border: 2px solid black; /* Default border */
+    background-color: silver; /* Default background color */
+    font-size: 18px;
+    text-align: center;
     margin: 5px 0;
-    padding: 5px 10px;
+    cursor: pointer;
 }
 
-audio {
-    display: none; /* Hides the audio player controls */
+.elevator-button-panel button.active {
+    border-color: red; /* Red outline when active (pressed) */
+    background-color: #ffcccc; /* Slightly different background when active */
+
 }
+

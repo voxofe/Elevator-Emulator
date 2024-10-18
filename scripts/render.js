@@ -1,5 +1,3 @@
-
-
 // Function to render the floors dynamically
 function renderBuildingAndShaft(nFloors, floorHeight, elevatorStartFloor) {
 
