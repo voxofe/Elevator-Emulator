@@ -1,4 +1,4 @@
-# Modified Look Algorithm (might change later):
+# Modified LOOk algorithm (might change later):
 
 1. When a floor request is made on an empty queue, it becomes the target floor.
 
