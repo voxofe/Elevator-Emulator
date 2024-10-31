@@ -3,8 +3,8 @@ import {renderBuildingAndShaft, renderElevatorButtonPanel} from './render.js'
 //Main state keeper
 let nFloors = 7; 
 const floorHeight = 100; 
-// const elevatorStartFloor = Math.floor(Math.random() * nFloors) + 1;
-const elevatorStartFloor = 1;
+const elevatorStartFloor = Math.floor(Math.random() * nFloors) + 1;
+
 
 document.addEventListener('DOMContentLoaded', () => {
     // Initial rendering

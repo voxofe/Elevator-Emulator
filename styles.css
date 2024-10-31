@@ -112,3 +112,22 @@ body{
 
 }
 
+.status-panel {
+    margin-left: 20px;
+    padding: 10px;
+    border: 2px solid black;
+    background-color: lightgray;
+    width: 150px;
+    text-align: center;
+}
+
+.status-panel h3 {
+    margin-bottom: 10px;
+}
+
+.status-panel p {
+    margin: 5px 0;
+}
+
+
+
