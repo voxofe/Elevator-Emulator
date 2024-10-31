@@ -6,7 +6,7 @@
 
 3. As the elevator moves in the direction of the target floor, it serves any floors in between (i.e., if the elevator is going from floor 2 to floor 5 and there's a request at floor 3, it will stop at floor 3 before continuing to floor 5).
 
-4. If the elevator stop at a floor, that floor is removed from the queue.
+4. If the elevator stops at a floor, that floor is removed from the queue.
 
 5. When the elevator reaches the target floor, the target floor is removed from the queue.
 
