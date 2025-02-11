@@ -9,6 +9,16 @@ body{
     margin-top: 30px;
 }
 
+.controls {
+    margin: 20px 0;
+}
+
+.controls input {
+    width: 50px;
+    text-align: center;
+}
+
+
 .building-wrapper {
     display: flex;
     justify-content: center;

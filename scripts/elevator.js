@@ -23,6 +23,7 @@ function setupElevatorButtons(nFloors) {
         if (button) {
             button.addEventListener('click', () => {
                 addToQueue(i);  // Call addToQueue when the button is clicked
+                console.log(`Button ${i} was clicked!`)
             });
         }
     }
