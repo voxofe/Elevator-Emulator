@@ -1,4 +1,4 @@
-import {nFloors, elevatorStartFloor, floorHeight} from './App.js'
+import {nFloors, elevatorStartFloor, floorHeight} from './app.js'
 import { updateElevatorStatus } from './status.js';
 import { highlightButton, resetButton } from './beautifulButtons.js';
 
@@ -12,9 +12,7 @@ let doorsClosed = true;
 let newRequest = false;// Make moveElevator() check for intermediate stops only when there's a new addition to the queue
 let afterStop = null; //Check to see if if elevator just made a stop and is about to move again
 const closeDoorsDelay = 3000;  // 3-second delay at each floor from open to closed doors
-const speed = 20;  // Elevator movement opeed (decrease to speed up)
-
-
+const speed = 15;  // Elevator movement opeed (decrease to speed up)
 
 // Function to attach event listeners to elevator buttons
 function setupElevatorButtons(nFloors) {

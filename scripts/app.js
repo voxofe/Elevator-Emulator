@@ -15,9 +15,12 @@ document.addEventListener('DOMContentLoaded', () => {
 //Function to set the number of floors
 function setFloors(num) {
     nFloors = num;
-    renderBuildingAndShaft();
-    renderElevatorButtonPanel();
+    renderBuildingAndShaft(nFloors, floorHeight, elevatorStartFloor);
+    renderElevatorButtonPanel(nFloors);
 }
 
-// Export the functions and variables
-export { setFloors, nFloors, elevatorStartFloor, floorHeight };
+function getFloors() {
+    return nFloors;
+}
+
+export { setFloors, getFloors, nFloors, elevatorStartFloor, floorHeight };
