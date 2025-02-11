@@ -9,6 +9,50 @@ body{
     margin-top: 30px;
 }
 
+audio {
+    display: none; /* Hides the audio player controls */
+}
+
+/* Flex container for play/pause icons */
+.music-controls {
+    display: flex;
+    gap: 10px; 
+    justify-content: center; 
+    position: absolute; 
+    top: 10px; 
+    left: 30px; 
+    z-index: 10; 
+}
+
+/* Style for the icons with a circular border */
+.music-controls i {
+    font-size: 20px;
+    cursor: pointer;
+    border: 3px solid #000000; 
+    color: black;
+    border-radius: 50%;
+    padding: 10px; 
+    transition: all 0.1s ease; 
+}
+
+/* Play icon hover effect */
+#play-music i:hover {
+    color: white; 
+    background-color: #0f7112; 
+    border-color: #000000; 
+}
+
+/* Pause icon hover effect */
+#pause-music i:hover {
+    color: white; 
+    background-color: #990b0b; 
+    border-color: #000000; 
+}
+
+
+
+
+
 .building-wrapper {
     display: flex;
     justify-content: center;

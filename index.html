@@ -5,10 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Elevator Emulator</title>
     <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
 </head>
 <body>
     
+    <audio id="elevator-music" loop autoplay>
+        <source src="./resources/elevator-music.mp3" type="audio/mpeg">
+    </audio> 
+
+    <div class="music-controls">
+        <a href="#" id="play-music">
+            <i class="fas fa-play"></i> <!-- Play Icon -->
+        </a>
+        <a href="#" id="pause-music">
+            <i class="fas fa-pause"></i> <!-- Pause Icon -->
+        </a>
+    </div>
     
+    
+
     <div class="building-wrapper">
 
         <div class="shaft">
@@ -27,7 +42,7 @@
     <script type="module" src="./scripts/app.js"></script>
     <script type="module" src="./scripts/render.js"></script>
     <script type="module" src="./scripts/elevator.js"></script>
-
+    <script type="module" src="./scripts/music.js"></script>
      
 </body>
 </html> 
